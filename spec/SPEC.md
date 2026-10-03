@@ -50,6 +50,27 @@ crawls drop the agent to L0.
 
 ## 2. Receipts (Phase 2)
 
+> **v0.2.1 change (agent side, no database required):** the agent signs only
+> what it can verify.
+>
+> - `result_hash` = sha256 of the exact bytes of the response body the agent
+>   emits.
+> - `task_hash = sha256(salt || JCS(task))` is computed by the client with its
+>   private salt and sent in the `TrustLayer-Task-Hash` header; the agent
+>   signs it as a commitment of the client, without recomputing it.
+> - Delivery = `{"v":1, agent_id, capability_id, nonce, task_hash,
+>   result_hash, timestamp, kid}` + `signature` (Ed25519 over the JCS form of
+>   the object without `signature`). It travels as base64url(JSON) in the
+>   `TrustLayer-Delivery` response header.
+> - Optional: without `TrustLayer-Nonce` the agent responds exactly as
+>   before.
+> - Agents SHOULD use a separate delivery key (`#delivery-1`), distinct from
+>   the identity key; both are listed in `assertionMethod` and both
+>   fingerprints appear in the DNS TXT record.
+> - Server-side validation, only when `TrustLayer-Nonce` is present: nonce is
+>   16-64 base64url characters; `task_hash` matches `sha256:<64 hex>`;
+>   violations return 400 with a clear message.
+
 Co-signed delivery: the client sends a random `nonce` header
 (`TrustLayer-Nonce`); the agent returns `TrustLayer-Delivery`: a signed object
 with `agent_id`, `capability_id`, `nonce`, `task_hash`, `result_hash`,
