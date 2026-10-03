@@ -1,0 +1,51 @@
+:root{--bg:#FAF9F5;--panel:#F0EEE6;--line:#E2DFD3;--text:#141413;--muted:#5E5D59;--accent:#B4532F;--warn:#8A5A00;--ok:#2F6B4F}
+@media (prefers-color-scheme:dark){:root{--bg:#1A1918;--panel:#242321;--line:#35332F;--text:#F2F0E8;--muted:#A9A69D;--accent:#E8946F;--warn:#E3B565;--ok:#7CC4A0}}
+*{box-sizing:border-box}
+html{scroll-padding-top:80px}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--accent);text-underline-offset:3px}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.875em}
+:not(pre)>code{background:var(--panel);border-radius:4px;padding:2px 6px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:24px;height:56px;padding:0 24px;background:var(--bg);border-bottom:1px solid var(--line)}
+.brand{font-weight:600;font-size:18px;color:var(--text);text-decoration:none}
+.top nav{margin-left:auto;display:flex;gap:20px;font-size:14px}
+.top nav a{color:var(--muted);text-decoration:none}
+.top nav a:hover,.top nav a[aria-current]{color:var(--text)}
+.shell{display:grid;grid-template-columns:260px minmax(0,1fr) 220px;max-width:1360px;margin:0 auto}
+.side{position:sticky;top:56px;align-self:start;height:calc(100vh - 56px);overflow:auto;padding:16px;border-right:1px solid var(--line);font-size:14px}
+.side h4{margin:20px 12px 6px;font-size:13px;font-weight:600;color:var(--muted)}
+.side a{display:block;padding:6px 12px;border-radius:6px;color:var(--text);text-decoration:none}
+.side a:hover{background:var(--panel)}
+.side a[aria-current]{background:var(--panel);color:var(--accent);font-weight:600}
+.doc{padding:40px 48px 96px;max-width:820px}
+.toc{position:sticky;top:56px;align-self:start;padding:40px 16px;font-size:13px}
+.toc b{display:block;margin-bottom:8px;color:var(--muted);font-weight:600}
+.toc a{display:block;padding:4px 0;color:var(--muted);text-decoration:none}
+.toc a:hover{color:var(--text)}
+.wrap{max-width:920px;margin:0 auto;padding:64px 24px 96px}
+h1{margin:0 0 12px;font:600 40px/1.15 ui-serif,Georgia,"Times New Roman",serif;letter-spacing:-.01em}
+h2{margin:48px 0 12px;font-size:24px;line-height:1.3}
+h3{margin:28px 0 8px;font-size:18px}
+.lead{font-size:18px;color:var(--muted);max-width:640px}
+.crumb{margin:0 0 8px;font-size:13px;color:var(--muted)}
+pre{margin:16px 0;padding:16px;overflow:auto;line-height:1.5;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.note{margin:24px 0;padding:14px 16px;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.note b{display:block;margin-bottom:2px}
+.note.warn{border-color:var(--warn)}
+table{display:block;width:100%;overflow-x:auto;border-collapse:collapse;font-size:14px}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:600}
+form.find{display:flex;flex-wrap:wrap;gap:8px;margin:32px 0 8px}
+form.find input,form.find select{height:48px;padding:0 14px;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:8px}
+form.find input{flex:1 1 320px}
+button.primary{height:48px;padding:0 24px;font:600 15px system-ui,sans-serif;color:var(--bg);background:var(--text);border:0;border-radius:8px;cursor:pointer}
+.hint{margin:0 0 24px;font-size:13px;color:var(--muted)}
+.hit{padding:16px 0;border-bottom:1px solid var(--line)}
+.hit h3{margin:0 0 4px}
+.hit p{margin:6px 0}
+.badge{display:inline-block;padding:2px 8px;font-size:12px;font-weight:600;color:var(--ok);border:1px solid var(--ok);border-radius:4px}
+footer.foot{margin-top:64px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+@media (max-width:1100px){.shell{grid-template-columns:240px minmax(0,1fr)}.toc{display:none}}
+@media (max-width:760px){.shell{display:block}.side{position:static;height:auto;border:0;border-bottom:1px solid var(--line)}.doc{padding:24px 20px 64px}h1{font-size:32px}.top{padding:0 16px;gap:12px}.top nav{gap:14px}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}

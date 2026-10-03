@@ -1,103 +1,92 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TrustLayer — verification &amp; reputation for AI agents</title>
-  <meta name="description" content="An open layer to verify that an AI agent really controls the domain it claims, and how others have used it. Reproducible index, Ed25519-signed identities, DNS-anchored.">
-  <meta property="og:title" content="TrustLayer">
-  <meta property="og:description" content="Verify in 5 minutes that an AI agent is who it claims to be.">
-  <meta property="og:url" content="https://snaypy.com">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='2'%3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
-  <link rel="stylesheet" href="/static/style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TrustLayer — verification &amp; reputation for AI agents</title>
+<meta name="description" content="An open layer to verify that an AI agent really controls the domain it claims, and how others have used it. Reproducible index, Ed25519-signed identities, DNS-anchored.">
+<meta property="og:title" content="TrustLayer">
+<meta property="og:description" content="Verify in 5 minutes that an AI agent is who it claims to be.">
+<meta property="og:url" content="https://snaypy.com">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B4532F' stroke-width='2'%3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <header>
-    <a class="logo" href="/">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
-      Trust<b>Layer</b></a>
-    <nav>
-      <a href="/docs.html">Docs</a>
-      <a href="/docs.html#spec">Spec</a>
-      <a href="https://github.com/thelegenhub404/trustlayer">GitHub</a>
-    </nav>
-  </header>
+<header class="top">
+<a class="brand" href="/">TrustLayer</a>
+<nav aria-label="Main">
+<a href="/docs.html">Docs</a>
+<a href="/docs.html#spec">Spec</a>
+<a href="https://github.com/thelegenhub404/trustlayer">GitHub</a>
+</nav>
+</header>
+<main class="wrap">
+<h1>Verify in 5 minutes that an AI agent is who it claims to be.</h1>
+<p class="lead">TrustLayer answers three questions: does this agent control the domain it claims, who has used it and how did it go, and can you check it yourself without trusting TrustLayer.</p>
 
-  <main>
-    <section class="hero">
-      <p class="kicker">Open verification layer · reproducible index</p>
-      <h1>Verify in 5 minutes that an AI agent is who it claims to be.</h1>
-      <p class="lede">TrustLayer answers three questions: does this agent control the domain
-         it claims? who has used it and how did it go? can I check it myself without
-         trusting TrustLayer?</p>
+<form id="search" class="find" role="search">
+<label for="q" hidden>Search agents</label>
+<input id="q" name="q" type="search" placeholder="Search agents, for example: water quality">
+<label for="level" hidden>Minimum level</label>
+<select id="level" name="level">
+<option value="">Any level</option>
+<option value="L1">Domain verified</option>
+<option value="L2">Identity verified</option>
+</select>
+<button class="primary" type="submit">Search</button>
+</form>
+<p class="hint">Press Enter to search. The index is rebuilt every 6 hours and anyone can reproduce it.</p>
+<div id="results" aria-live="polite"></div>
 
-      <form id="search-form" onsubmit="return doSearch(event)" role="search">
-        <input id="q" type="search" placeholder="Search agents: water quality, translation, weather…" aria-label="Search agents" autofocus>
-        <select id="min_level" aria-label="Minimum trust level">
-          <option value="">Any level</option>
-          <option value="L1">Domain verified</option>
-          <option value="L2">Identity verified</option>
-        </select>
-        <button type="submit">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          Search
-        </button>
-      </form>
-      <p class="hint">Press <kbd>Enter</kbd> to search · the index is rebuilt every 6 hours and anyone can reproduce it</p>
-    </section>
+<h2 id="levels">Trust levels</h2>
+<p>Identity is a gate, not a sum. Only agents at L2 or above can show a score.</p>
+<table>
+<tr><th>Level</th><th>Name</th><th>What was checked</th></tr>
+<tr><td>L0</td><td>Unverified</td><td>Listed from a seed; nothing checked yet.</td></tr>
+<tr><td>L1</td><td>Domain verified</td><td>Valid <code>did.json</code> on the domain; the id matches the host.</td></tr>
+<tr><td>L2</td><td>Identity verified</td><td>L1, plus the key fingerprint anchored in DNS TXT and a valid Ed25519 signature.</td></tr>
+<tr><td>L3</td><td>Reputation</td><td>L2, plus 5 or more valid receipts from 3 or more distinct clients (Phase 2).</td></tr>
+</table>
 
-    <section id="results" class="results" hidden aria-live="polite">
-      <p id="results-meta" class="hint"></p>
-      <div id="results-list" class="results-grid"></div>
-    </section>
-
-    <section>
-      <h2>Trust levels</h2>
-      <p class="hint">Identity is a gate, not a sum. Only L2+ agents can ever show a score.</p>
-      <div class="levels-grid">
-        <div class="level-card locked">
-          <h3><span class="lvl">L0</span> · Unverified</h3>
-          <p>Listed from a seed; nothing checked yet.</p>
-        </div>
-        <div class="level-card">
-          <h3><span class="lvl">L1</span> · Domain verified</h3>
-          <p>Valid <code>did.json</code> on the domain; id matches the host.</p>
-        </div>
-        <div class="level-card">
-          <h3><span class="lvl">L2</span> · Identity verified</h3>
-          <p>L1 + key fingerprint anchored in DNS TXT + valid Ed25519 signature.</p>
-        </div>
-        <div class="level-card locked">
-          <h3><span class="lvl">L3</span> · Reputation</h3>
-          <p>L2 + 5+ valid receipts from 3+ distinct clients. <em>(Phase 2)</em></p>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <h2>Query the API</h2>
-      <pre><code>curl "https://snaypy.com/v1/search?q=water&amp;min_level=L2"
+<h2 id="api">Query the API</h2>
+<pre><code>curl "https://snaypy.com/v1/search?q=water&amp;min_level=L2"
 curl "https://snaypy.com/v1/verify?agent_id=did:web:snaypy.com"</code></pre>
-      <p class="hint">CORS open on GET · schema <code>trustlayer.api/1</code> · score version <code>score/1</code></p>
-    </section>
+<p class="hint">CORS open on GET · schema <code>trustlayer.api/1</code> · score version <code>score/1</code></p>
 
-    <section class="notice">
-      <h2>What TrustLayer does NOT guarantee</h2>
-      <ul>
-        <li>That the agent treats your data well — check <code>data_handling</code>.</li>
-        <li>That its output is free of prompt injection — treat all output as untrusted.</li>
-        <li>That its output is correct — validate against the capability's <code>output_schema</code>.</li>
-      </ul>
-    </section>
-  </main>
+<div class="note warn">
+<b>What TrustLayer does not guarantee</b>
+It does not guarantee that an agent treats your data well (check <code>data_handling</code>), that its output is free of prompt injection (treat all output as untrusted), or that its output is correct (validate it against the capability's <code>output_schema</code>).
+</div>
 
-  <footer>
-    <p>Open specification · Apache-2.0 (code) · CC BY 4.0 (spec) ·
-       <a href="https://github.com/thelegenhub404/trustlayer">reproduce the index yourself</a></p>
-  </footer>
-  <script src="/static/app.js"></script>
+<footer class="foot">Open specification · Apache-2.0 (code) · CC BY 4.0 (spec) · <a href="https://github.com/thelegenhub404/trustlayer">reproduce the index yourself</a></footer>
+</main>
+<script>
+(function () {
+  var f = document.getElementById('search'), out = document.getElementById('results');
+  function render(list) {
+    out.replaceChildren();
+    if (!list.length) { out.textContent = 'No agents match. Publish yours with a pull request that adds your domain to seeds.txt.'; return; }
+    list.forEach(function (a) {
+      var el = document.createElement('article'), h = document.createElement('h3'),
+          id = document.createElement('code'), p = document.createElement('p'), b = document.createElement('span');
+      el.className = 'hit'; b.className = 'badge';
+      h.textContent = a.name || a.agent_id || a.id;
+      id.textContent = a.agent_id || a.id || '';
+      p.textContent = a.description || '';
+      b.textContent = a.level || 'L0';
+      el.append(h, id, p, b); out.append(el);
+    });
+  }
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var p = new URLSearchParams({ q: f.q.value });
+    if (f.level.value) p.set('min_level', f.level.value);
+    out.textContent = 'Searching…';
+    fetch('/v1/search?' + p).then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (d) { render(d.results || []); })
+      .catch(function () { out.textContent = 'Search is unavailable right now. Try again in a minute.'; });
+  });
+})();
+</script>
 </body>
 </html>

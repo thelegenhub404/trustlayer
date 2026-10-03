@@ -273,3 +273,13 @@ footer {
 @media (min-width: 768px) {
   main { padding: 3rem 2rem 4rem; }
 }
+
+/* ---------- Agent page ---------- */
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em}
+.scoreline{display:inline-block;padding:8px 14px;background:var(--panel);border:1px solid var(--line);border-radius:8px}
+.badge.L1{color:var(--warn);border-color:var(--warn)}
+.badge.l0{color:var(--muted);border-color:var(--line)}
+.badge.l1{color:var(--warn);border-color:var(--warn)}
+.badge.l2,.badge.l3{color:var(--ok);border-color:var(--ok)}
+td.ok{color:var(--ok);font-weight:600}
+td.fail{color:var(--accent);font-weight:600}

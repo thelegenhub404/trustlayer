@@ -1,60 +1,104 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Docs — TrustLayer</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='2'%3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
-  <link rel="stylesheet" href="/static/style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docs — TrustLayer</title>
+<meta name="description" content="How to publish a verifiable agent, how verification works and how to use the TrustLayer API.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B4532F' stroke-width='2'%3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <header>
-    <a class="logo" href="/">Trust<b>Layer</b></a>
-    <nav><a href="/">Search</a><a href="https://github.com/">GitHub</a></nav>
-  </header>
-  <main>
-    <h1>Publish your agent in 5 minutes</h1>
+<header class="top">
+<a class="brand" href="/">TrustLayer</a>
+<nav aria-label="Main">
+<a href="/docs.html" aria-current="page">Docs</a>
+<a href="/docs.html#spec">Spec</a>
+<a href="https://github.com/thelegenhub404/trustlayer">GitHub</a>
+</nav>
+</header>
+<div class="shell">
+<aside class="side" aria-label="Documentation">
+<h4>Get started</h4>
+<a href="#overview" aria-current="page">Overview</a>
+<a href="#publish">Publish an agent</a>
+<h4>Specification</h4>
+<a href="#spec">Files and identity</a>
+<a href="#verification">How verification works</a>
+<h4>API</h4>
+<a href="#search">Search</a>
+<a href="#verify">Verify</a>
+</aside>
+<main class="doc">
+<p class="crumb">Get started</p>
+<h1 id="overview">Overview</h1>
+<p class="lead">TrustLayer checks that an AI agent controls the domain it claims and shows how others have used it. You can repeat every check yourself.</p>
+<p>Each agent publishes three things on its own domain: a DID document with its keys, a DNS record with the key fingerprint, and a signed list of capabilities. The index is built from those files and is reproducible.</p>
+<div class="note"><b>Verified does not mean safe</b>TrustLayer proves identity and reports usage. It does not check how an agent handles your data or whether its output is correct. Treat every output as untrusted.</div>
 
-    <h2>1. Generate your keys</h2>
-    <pre>pip install trustlayer
-tl keygen analytics.example.com</pre>
+<h2 id="publish">Publish an agent</h2>
+<p>You need a domain you control and access to its DNS.</p>
+<h3>1. Create a key</h3>
+<pre><code>pip install -e .          # from the TrustLayer repository
+tl keygen example.com</code></pre>
+<p>Keep the printed private seed secret; it never goes into the repository.</p>
+<h3>2. Publish your DID document</h3>
+<p>Serve <code>/.well-known/did.json</code> from your domain with the public key.</p>
+<h3>3. Anchor the key in DNS</h3>
+<pre><code>_trustlayer.example.com.  300  IN  TXT  "v=tl1; fp=sha256:&lt;key-fingerprint&gt;"</code></pre>
+<h3>4. Sign your capabilities</h3>
+<pre><code>tl sign trustlayer.json --seed-b64u &lt;your-private-seed&gt; --kid did:web:example.com#key-1</code></pre>
+<p>Serve the signed output at <code>/.well-known/trustlayer.json</code>. The card must expire within 90 days.</p>
+<h3>5. Check it, then add your domain</h3>
+<pre><code>tl verify example.com</code></pre>
+<p>When the result is L2, open a pull request that adds your domain to <code>seeds.txt</code>. The next crawl lists you.</p>
+<div class="note"><b>Tested here first</b>These are the exact commands used to publish and verify snaypy.com itself — you can see its signed card and DNS anchor live as the reference implementation.</div>
 
-    <h2>2. Publish did.json</h2>
-    <p>Serve <code>https://YOUR-DOMAIN/.well-known/did.json</code> with the JWK
-       printed by <code>tl keygen</code>. The <code>id</code> must be exactly
-       <code>did:web:YOUR-DOMAIN</code>.</p>
+<h2 id="spec">Files and identity</h2>
+<table>
+<tr><th>Where</th><th>What</th></tr>
+<tr><td><code>/.well-known/did.json</code></td><td>did:web document with the Ed25519 public keys.</td></tr>
+<tr><td><code>_trustlayer.&lt;domain&gt;</code> TXT</td><td>Fingerprint of the public key, from a second, independent channel.</td></tr>
+<tr><td><code>/.well-known/trustlayer.json</code></td><td>Capabilities, endpoints and pricing, signed over RFC 8785 canonical JSON.</td></tr>
+</table>
+<p>The agent id is <code>did:web:</code> followed by the host. An id that does not match the host is rejected.</p>
 
-    <h2>3. Anchor the fingerprint in DNS</h2>
-    <p>Add the TXT record printed by <code>tl keygen</code>:</p>
-    <pre>_trustlayer.YOUR-DOMAIN. 300 IN TXT "v=tl1; fp=sha256:HEX"</pre>
-    <p>Why: an attacker who compromises only your web server could change
-       did.json, but not your DNS. Verifiers demand both channels.</p>
+<h2 id="verification">How verification works</h2>
+<p>The crawler runs these checks every 6 hours. Any failure lowers the level and is shown on the agent's page.</p>
+<table>
+<tr><th>Check</th><th>Failing it means</th></tr>
+<tr><td>Id matches the host</td><td>Rejected.</td></tr>
+<tr><td>Signature is valid</td><td>L1 at most.</td></tr>
+<tr><td>Key is current and not revoked</td><td>L1 at most.</td></tr>
+<tr><td>Fingerprint matches DNS</td><td>L1 at most.</td></tr>
+<tr><td>Endpoints belong to the same domain</td><td>Endpoint dropped.</td></tr>
+</table>
 
-    <h2>4. Publish trustlayer.json, signed</h2>
-    <p>Create the card (name, description, capabilities, expiry ≤ 90 days),
-       then sign it:</p>
-    <pre>tl sign trustlayer.json --seed-b64u YOUR_SEED &gt; .well-known/trustlayer.json</pre>
+<h2 id="search">Search</h2>
+<pre><code>GET /v1/search?q=water&amp;min_level=L2&amp;limit=10</code></pre>
+<table>
+<tr><th>Parameter</th><th>Description</th></tr>
+<tr><td><code>q</code></td><td>Text to match in names, descriptions and capabilities.</td></tr>
+<tr><td><code>min_level</code></td><td><code>L1</code>, <code>L2</code> or <code>L3</code>.</td></tr>
+<tr><td><code>min_trust</code>, <code>min_confidence</code></td><td>Score filters, from 0 to 1.</td></tr>
+<tr><td><code>limit</code>, <code>offset</code></td><td>Pagination.</td></tr>
+</table>
 
-    <h2>5. Open a PR adding your domain to seeds.txt</h2>
-    <p>CI runs <code>tl verify YOUR-DOMAIN</code> and comments the result.
-       Within 6 hours your agent appears with its level in the index.</p>
+<h2 id="verify">Verify</h2>
+<pre><code>GET /v1/verify?agent_id=did:web:snaypy.com</code></pre>
+<p>Returns the precomputed level and every check with its result, plus the time of the last verification.</p>
 
-    <h2>What TrustLayer does NOT guarantee</h2>
-    <ul>
-      <li>That the agent treats your data well — check <code>data_handling</code>.</li>
-      <li>That its output is free of prompt injection — treat it as untrusted.</li>
-      <li>That its output is correct — validate against <code>output_schema</code>.</li>
-    </ul>
-
-    <h2 id="spec">Specification</h2>
-    <p>The normative spec lives in <code>spec/SPEC.md</code> in the repository,
-       licensed CC BY 4.0. The index is reproducible: anyone can run
-       <code>python -m crawler.run --seeds seeds.txt</code> and obtain the same
-       <code>agents.json</code>.</p>
-  </main>
-  <footer><p>Open specification · Apache-2.0 (code) · CC BY 4.0 (spec)</p></footer>
+<footer class="foot">Open specification · Apache-2.0 (code) · CC BY 4.0 (spec)</footer>
+</main>
+<nav class="toc" aria-label="On this page">
+<b>On this page</b>
+<a href="#overview">Overview</a>
+<a href="#publish">Publish an agent</a>
+<a href="#spec">Files and identity</a>
+<a href="#verification">How verification works</a>
+<a href="#search">Search</a>
+<a href="#verify">Verify</a>
+</nav>
+</div>
 </body>
 </html>
