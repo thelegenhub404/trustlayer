@@ -9,7 +9,7 @@
       "publicKeyJwk": {
         "kty": "OKP",
         "crv": "Ed25519",
-        "x": "REPLACE_WITH_BASE64URL_PUBLIC_KEY"
+        "x": "zG6imLiVfNClXGSgMOLI2spd87A9ToEPfNtUWvoopaU"
       }
     }
   ],
