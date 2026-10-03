@@ -95,8 +95,10 @@ It does not guarantee that an agent treats your data well (check <code>data_hand
   fetch('/v1/index/meta').then(function (r) { if (!r.ok) throw 0; return r.json(); })
     .then(function (m) {
       var c = m.counts || {};
+      var indexed = (c.indexed != null) ? c.indexed : m.n_agents;
+      if (indexed == null) { out.textContent = ''; return; }
       var verified = (c.l2 || 0) + (c.l3 || 0);
-      out.textContent = c.indexed + ' agents indexed \u00b7 ' + verified + ' verified.';
+      out.textContent = indexed + ' agents indexed \u00b7 ' + verified + ' verified.';
     })
     .catch(function () { out.textContent = ''; });
 })();
