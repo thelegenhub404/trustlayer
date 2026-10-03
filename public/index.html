@@ -36,6 +36,7 @@
 <button class="primary" type="submit">Search</button>
 </form>
 <p class="hint">Press Enter to search. The index is rebuilt every 6 hours and anyone can reproduce it.</p>
+<p id="stats" class="hint" aria-live="polite"></p>
 <div id="results" aria-live="polite"></div>
 
 <h2 id="levels">Trust levels</h2>
@@ -86,6 +87,18 @@ It does not guarantee that an agent treats your data well (check <code>data_hand
       .then(function (d) { render(d.results || []); })
       .catch(function () { out.textContent = 'Search is unavailable right now. Try again in a minute.'; });
   });
+})();
+
+(function () {
+  var out = document.getElementById('stats');
+  if (!out) return;
+  fetch('/v1/index/meta').then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    .then(function (m) {
+      var c = m.counts || {};
+      var verified = (c.l2 || 0) + (c.l3 || 0);
+      out.textContent = c.indexed + ' agents indexed \u00b7 ' + verified + ' verified.';
+    })
+    .catch(function () { out.textContent = ''; });
 })();
 </script>
 </body>

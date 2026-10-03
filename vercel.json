@@ -3,7 +3,10 @@
   "rewrites": [
     { "source": "/v1/search", "destination": "/api/search" },
     { "source": "/v1/agents/:id", "destination": "/api/agents?id=:id" },
-    { "source": "/v1/verify", "destination": "/api/verify" }
+    { "source": "/v1/verify", "destination": "/api/verify" },
+    { "source": "/v1/index/meta", "destination": "/api/meta" },
+    { "source": "/agent/:id", "destination": "/agent.html" },
+    { "source": "/badge/:id", "destination": "/api/badge?id=:id" }
   ],
   "functions": {
     "api/*.py": { "includeFiles": "data/**", "maxDuration": 10 }

@@ -18,8 +18,16 @@
     return b;
   }
 
+  function resolveId() {
+    // Clean route /agent/did:web:host first; legacy ?id= fallback.
+    var seg = "";
+    try { seg = decodeURIComponent(location.pathname.split("/").pop() || ""); } catch (e) { seg = ""; }
+    if (/^did:web:/i.test(seg)) return seg.toLowerCase();
+    return new URLSearchParams(location.search).get("id") || "";
+  }
+
   function renderAgent() {
-    var id = new URLSearchParams(location.search).get("id") || "";
+    var id = resolveId();
     var root = document.getElementById("agent-root");
     var loading = document.getElementById("agent-loading");
 
@@ -82,7 +90,22 @@
         });
 
         if ((a.capabilities || []).length) {
-          root.appendChild(el("h2", null, "Capabilities"));
+          root.appendChild(el("h2", null, "Badge"));
+        var note = el("div", "note");
+        note.appendChild(el("b", null, "Use this badge on your site"));
+        var snippet = el("code", null,
+          '<a href="' + location.origin + "/agent/" + a.agent_id + '">' +
+          '<img src="' + location.origin + "/badge/" + a.agent_id +
+          '" alt="TrustLayer badge"></a>');
+        snippet.style.display = "block";
+        snippet.style.whiteSpace = "pre-wrap";
+        snippet.style.wordBreak = "break-all";
+        note.appendChild(snippet);
+        note.appendChild(el("p", "hint",
+          "The badge only proves what this page shows."));
+        root.appendChild(note);
+
+        root.appendChild(el("h2", null, "Capabilities"));
           var ct = el("table");
           var ch = document.createElement("tr");
           ["Capability", "Endpoint", "Payment"].forEach(function (t) {
