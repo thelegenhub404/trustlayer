@@ -25,7 +25,9 @@ safety of an agent's output.
 An agent only gets a score at L2 or above. A new agent should not look
 trustworthy.
 
-## Quick start: publish your agent in 5 minutes
+## Quick start: publish your agent in 10 minutes
+
+See the full step-by-step guide: **[GETTING_STARTED.md](GETTING_STARTED.md)**
 
 ```bash
 pip install -e .
