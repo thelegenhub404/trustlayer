@@ -1,0 +1,81 @@
+{
+  "agent_id": "did:web:snaypy.com",
+  "domain": "snaypy.com",
+  "level": "L2",
+  "checks": [
+    {
+      "name": "did_json",
+      "ok": true
+    },
+    {
+      "name": "did_matches_host",
+      "ok": true
+    },
+    {
+      "name": "trustlayer_json",
+      "ok": true
+    },
+    {
+      "name": "agent_id_matches",
+      "ok": true
+    },
+    {
+      "name": "signature",
+      "ok": true
+    },
+    {
+      "name": "key_not_expired",
+      "ok": true
+    },
+    {
+      "name": "key_fingerprint",
+      "ok": true
+    },
+    {
+      "name": "dns_anchor",
+      "ok": true
+    }
+  ],
+  "red_flags": [],
+  "name": "TrustLayer Index",
+  "description": "TrustLayer's own search index and verification API. This site is itself a TrustLayer agent (dogfooding).",
+  "capabilities": [
+    {
+      "id": "agent-search",
+      "description": "BM25 search over the verified agent index",
+      "endpoint": "https://snaypy.com/v1/search",
+      "payment": {
+        "method": "none"
+      },
+      "pricing": {
+        "model": "per_call",
+        "amount": "0.00",
+        "currency": "USD"
+      },
+      "data_handling": {
+        "retention": "none",
+        "trains_on_inputs": false
+      }
+    },
+    {
+      "id": "agent-verify",
+      "description": "Precomputed verification result (level, checks, red flags) for any indexed agent",
+      "endpoint": "https://snaypy.com/v1/verify",
+      "payment": {
+        "method": "none"
+      },
+      "pricing": {
+        "model": "per_call",
+        "amount": "0.00",
+        "currency": "USD"
+      },
+      "data_handling": {
+        "retention": "none",
+        "trains_on_inputs": false
+      }
+    }
+  ],
+  "trust": null,
+  "confidence": null,
+  "score_version": "score/1"
+}
