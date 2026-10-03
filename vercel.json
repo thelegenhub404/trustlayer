@@ -1,0 +1,28 @@
+{
+  "outputDirectory": "public",
+  "rewrites": [
+    { "source": "/v1/search", "destination": "/api/search" },
+    { "source": "/v1/agents/:id", "destination": "/api/agents?id=:id" },
+    { "source": "/v1/verify", "destination": "/api/verify" }
+  ],
+  "functions": {
+    "api/*.py": { "includeFiles": "data/**", "maxDuration": 10 }
+  },
+  "headers": [
+    {
+      "source": "/v1/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, OPTIONS" },
+        { "key": "Cache-Control", "value": "public, s-maxage=300, stale-while-revalidate=600" }
+      ]
+    },
+    {
+      "source": "/.well-known/(.*)",
+      "headers": [
+        { "key": "Content-Type", "value": "application/json" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    }
+  ]
+}

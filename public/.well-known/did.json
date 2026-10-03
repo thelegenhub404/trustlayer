@@ -1,0 +1,17 @@
+{
+  "@context": ["https://www.w3.org/ns/did/v1"],
+  "id": "did:web:snaypy.com",
+  "verificationMethod": [
+    {
+      "id": "did:web:snaypy.com#key-2026-1",
+      "type": "JsonWebKey2020",
+      "controller": "did:web:snaypy.com",
+      "publicKeyJwk": {
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "REPLACE_WITH_BASE64URL_PUBLIC_KEY"
+      }
+    }
+  ],
+  "assertionMethod": ["did:web:snaypy.com#key-2026-1"]
+}

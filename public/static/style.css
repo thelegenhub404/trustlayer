@@ -1,0 +1,71 @@
+:root {
+  --bg: #0d1117;
+  --fg: #e6edf3;
+  --muted: #8b949e;
+  --accent: #58a6ff;
+  --card: #161b22;
+  --border: #30363d;
+  --ok: #3fb950;
+  --warn: #d29922;
+  --bad: #f85149;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.logo { color: var(--fg); text-decoration: none; font-size: 1.2rem; }
+.logo b { color: var(--accent); }
+nav a { color: var(--muted); text-decoration: none; margin-left: 1rem; }
+nav a:hover { color: var(--fg); }
+main { max-width: 860px; margin: 0 auto; padding: 1.5rem; }
+.hero h1 { font-size: 1.9rem; margin-bottom: .5rem; }
+#search-form { display: flex; gap: .5rem; margin: 1.25rem 0; flex-wrap: wrap; }
+#search-form input { flex: 1; min-width: 240px; }
+input, select, button {
+  background: var(--card);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: .6rem .8rem;
+  font-size: 1rem;
+}
+button { background: var(--accent); color: #0d1117; font-weight: 600; cursor: pointer; }
+.results, .levels, .limits { margin-top: 2rem; }
+.muted { color: var(--muted); }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+.card a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.badge { display: inline-block; padding: .1rem .5rem; border-radius: 999px;
+         font-size: .8rem; font-weight: 600; }
+.badge.L2 { background: rgba(63,185,80,.15); color: var(--ok); }
+.badge.L1 { background: rgba(210,153,34,.15); color: var(--warn); }
+.badge.L0 { background: rgba(139,148,158,.15); color: var(--muted); }
+.checks li, ul li { margin: .25rem 0; }
+.ok { color: var(--ok); } .fail { color: var(--bad); }
+pre {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: .8rem 1rem;
+  overflow-x: auto;
+}
+code { background: var(--card); padding: .1rem .35rem; border-radius: 4px; }
+footer { text-align: center; color: var(--muted); padding: 2rem 1rem;
+         border-top: 1px solid var(--border); font-size: .9rem; }
+.redflag { color: var(--bad); font-weight: 600; }

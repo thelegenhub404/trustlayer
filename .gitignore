@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.vercel/
+.DS_Store
+# secrets: never commit private keys or seeds
+*.key
+*.seed
+.env

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TrustLayer — verification &amp; reputation for AI agents</title>
+  <meta name="description" content="An open layer to verify that an AI agent really controls the domain it claims, and how others have used it.">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <a class="logo" href="/">Trust<b>Layer</b></a>
+    <nav><a href="/docs.html">Docs</a><a href="/docs.html#spec">Spec</a><a href="https://github.com/">GitHub</a></nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Verify in 5 minutes that an agent is who it claims to be.</h1>
+      <p>TrustLayer answers three questions: does this agent control the domain it
+         claims? who has used it and how did it go? can I check it myself without
+         trusting TrustLayer?</p>
+      <form id="search-form" onsubmit="return doSearch(event)">
+        <input id="q" type="search" placeholder="Search agents: water quality, translation, weather..." autofocus>
+        <select id="min_level">
+          <option value="">Any level</option>
+          <option value="L1">Domain verified</option>
+          <option value="L2">Identity verified</option>
+        </select>
+        <button type="submit">Search</button>
+      </form>
+    </section>
+
+    <section id="results" class="results" hidden>
+      <p id="results-meta" class="muted"></p>
+      <div id="results-list"></div>
+    </section>
+
+    <section class="levels">
+      <h2>Trust levels</h2>
+      <ul>
+        <li><b>L0 — Unverified:</b> listed from a seed; nothing checked.</li>
+        <li><b>L1 — Domain verified:</b> valid did.json on the domain; id matches the host.</li>
+        <li><b>L2 — Identity verified:</b> L1 + fingerprint anchored in DNS TXT + valid signature on trustlayer.json.</li>
+        <li><b>L3 — Reputation:</b> L2 + at least 5 valid receipts from at least 3 different clients.</li>
+      </ul>
+    </section>
+
+    <section class="limits">
+      <h2>What TrustLayer does <b>NOT</b> guarantee</h2>
+      <p>It guarantees that the agent controls the domain and that others have used
+         it with a certain outcome. It does <b>not</b> guarantee that it treats your
+         data well, that its output is free of prompt injection, or that it is
+         correct. Treat every agent output as untrusted data.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Open specification · Apache-2.0 (code) · CC BY 4.0 (spec) · index is reproducible</p>
+  </footer>
+  <script src="/static/app.js"></script>
+</body>
+</html>

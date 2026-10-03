@@ -1,0 +1,35 @@
+{
+  "spec_version": "trustlayer/0.2",
+  "agent_id": "did:web:snaypy.com",
+  "name": "TrustLayer Index",
+  "description": "TrustLayer's own search index and verification API. This site is itself a TrustLayer agent (dogfooding).",
+  "version": "0.2.0",
+  "contact": "REPLACE_WITH_CONTACT_EMAIL",
+  "capabilities": [
+    {
+      "id": "agent-search",
+      "description": "BM25 search over the verified agent index",
+      "endpoint": "https://snaypy.com/v1/search",
+      "protocol": "https+json",
+      "payment": { "method": "none" },
+      "pricing": { "model": "per_call", "amount": "0.00", "currency": "USD" },
+      "data_handling": { "retention": "none", "trains_on_inputs": false }
+    },
+    {
+      "id": "agent-verify",
+      "description": "Precomputed verification result (level, checks, red flags) for any indexed agent",
+      "endpoint": "https://snaypy.com/v1/verify",
+      "protocol": "https+json",
+      "payment": { "method": "none" },
+      "pricing": { "model": "per_call", "amount": "0.00", "currency": "USD" },
+      "data_handling": { "retention": "none", "trains_on_inputs": false }
+    }
+  ],
+  "issued_at": "REPLACE_WITH_ISSUED_AT",
+  "expires_at": "REPLACE_WITH_EXPIRY_MAX_90_DAYS",
+  "signature": {
+    "alg": "Ed25519",
+    "kid": "did:web:snaypy.com#key-2026-1",
+    "value": "REPLACE_AFTER_RUNNING_tl_sign"
+  }
+}

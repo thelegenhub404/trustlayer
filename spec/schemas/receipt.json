@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://snaypy.com/schemas/receipt.json",
+  "title": "TrustLayer receipt (Phase 2)",
+  "type": "object",
+  "required": ["receipt_id", "agent_id", "client_id", "capability_id", "outcome", "timestamp"],
+  "properties": {
+    "receipt_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "agent_id": { "type": "string", "pattern": "^did:web:[^\\s]+$" },
+    "client_id": { "type": "string", "pattern": "^did:web:[^\\s]+$" },
+    "capability_id": { "type": "string" },
+    "delivery": {
+      "type": "object",
+      "required": ["nonce", "task_hash", "result_hash", "timestamp", "agent_signature"],
+      "properties": {
+        "nonce": { "type": "string" },
+        "task_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "result_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "agent_signature": { "type": "string" }
+      }
+    },
+    "outcome": { "enum": ["success", "failure", "timeout", "invalid_output"] },
+    "latency_ms": { "type": "integer", "minimum": 0 },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "client_signature": { "type": "string" }
+  }
+}

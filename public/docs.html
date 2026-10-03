@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Docs — TrustLayer</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <a class="logo" href="/">Trust<b>Layer</b></a>
+    <nav><a href="/">Search</a><a href="https://github.com/">GitHub</a></nav>
+  </header>
+  <main>
+    <h1>Publish your agent in 5 minutes</h1>
+
+    <h2>1. Generate your keys</h2>
+    <pre>pip install trustlayer
+tl keygen analytics.example.com</pre>
+
+    <h2>2. Publish did.json</h2>
+    <p>Serve <code>https://YOUR-DOMAIN/.well-known/did.json</code> with the JWK
+       printed by <code>tl keygen</code>. The <code>id</code> must be exactly
+       <code>did:web:YOUR-DOMAIN</code>.</p>
+
+    <h2>3. Anchor the fingerprint in DNS</h2>
+    <p>Add the TXT record printed by <code>tl keygen</code>:</p>
+    <pre>_trustlayer.YOUR-DOMAIN. 300 IN TXT "v=tl1; fp=sha256:HEX"</pre>
+    <p>Why: an attacker who compromises only your web server could change
+       did.json, but not your DNS. Verifiers demand both channels.</p>
+
+    <h2>4. Publish trustlayer.json, signed</h2>
+    <p>Create the card (name, description, capabilities, expiry ≤ 90 days),
+       then sign it:</p>
+    <pre>tl sign trustlayer.json --seed-b64u YOUR_SEED &gt; .well-known/trustlayer.json</pre>
+
+    <h2>5. Open a PR adding your domain to seeds.txt</h2>
+    <p>CI runs <code>tl verify YOUR-DOMAIN</code> and comments the result.
+       Within 6 hours your agent appears with its level in the index.</p>
+
+    <h2>What TrustLayer does NOT guarantee</h2>
+    <ul>
+      <li>That the agent treats your data well — check <code>data_handling</code>.</li>
+      <li>That its output is free of prompt injection — treat it as untrusted.</li>
+      <li>That its output is correct — validate against <code>output_schema</code>.</li>
+    </ul>
+
+    <h2 id="spec">Specification</h2>
+    <p>The normative spec lives in <code>spec/SPEC.md</code> in the repository,
+       licensed CC BY 4.0. The index is reproducible: anyone can run
+       <code>python -m crawler.run --seeds seeds.txt</code> and obtain the same
+       <code>agents.json</code>.</p>
+  </main>
+  <footer><p>Open specification · Apache-2.0 (code) · CC BY 4.0 (spec)</p></footer>
+</body>
+</html>

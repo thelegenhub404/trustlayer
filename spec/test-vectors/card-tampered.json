@@ -1,0 +1,47 @@
+{
+  "name": "card-tampered",
+  "did_doc": {
+    "@context": [
+      "https://www.w3.org/ns/did/v1"
+    ],
+    "id": "did:web:vectors.example.com",
+    "verificationMethod": [
+      {
+        "id": "did:web:vectors.example.com#key-1",
+        "type": "JsonWebKey2020",
+        "controller": "did:web:vectors.example.com",
+        "publicKeyJwk": {
+          "kty": "OKP",
+          "crv": "Ed25519",
+          "x": "iojj3XQJ8ZX9UtstPLpdcspnCb8dlBIb83SIAbQPb1w"
+        }
+      }
+    ],
+    "assertionMethod": [
+      "did:web:vectors.example.com#key-1"
+    ]
+  },
+  "card": {
+    "spec_version": "trustlayer/0.2",
+    "agent_id": "did:web:vectors.example.com",
+    "name": "Tampered",
+    "capabilities": [
+      {
+        "id": "echo",
+        "endpoint": "https://vectors.example.com/v1/echo",
+        "protocol": "https+json",
+        "payment": {
+          "method": "none"
+        }
+      }
+    ],
+    "issued_at": "2026-01-01T00:00:00Z",
+    "expires_at": "2027-01-01T00:00:00Z",
+    "signature": {
+      "alg": "Ed25519",
+      "kid": "did:web:vectors.example.com#key-1",
+      "value": "3PQJX4-BceOdUmOVM9OCSdgpl4hZ3qZLqpbsxQN3s9TYCtS6iGdQWtzmdNv8ZDIxhvFUwJtwqNqAQHuNzLhnDQ"
+    }
+  },
+  "expect": "bad_signature"
+}

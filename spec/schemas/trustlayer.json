@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://snaypy.com/schemas/trustlayer.json",
+  "title": "TrustLayer agent card",
+  "type": "object",
+  "required": ["spec_version", "agent_id", "name", "capabilities", "issued_at", "expires_at", "signature"],
+  "properties": {
+    "spec_version": { "const": "trustlayer/0.2" },
+    "agent_id": { "type": "string", "pattern": "^did:web:[^\\s]+$" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "description": { "type": "string", "maxLength": 1000 },
+    "version": { "type": "string" },
+    "contact": { "type": "string" },
+    "a2a_card": { "type": "string", "format": "uri" },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "endpoint", "protocol", "payment"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "description": { "type": "string" },
+          "endpoint": { "type": "string", "format": "uri" },
+          "protocol": { "const": "https+json" },
+          "input_schema_url": { "type": "string", "format": "uri" },
+          "output_schema_url": { "type": "string", "format": "uri" },
+          "payment": {
+            "type": "object",
+            "required": ["method"],
+            "properties": { "method": { "enum": ["none", "api_key", "http_402"] } }
+          },
+          "pricing": {
+            "type": "object",
+            "properties": {
+              "model": { "type": "string" },
+              "amount": { "type": "string" },
+              "currency": { "type": "string", "minLength": 3, "maxLength": 3 }
+            }
+          },
+          "data_handling": {
+            "type": "object",
+            "properties": {
+              "retention": { "type": "string" },
+              "trains_on_inputs": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "issued_at": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "revoked_kids": { "type": "array", "items": { "type": "string" } },
+    "signature": {
+      "type": "object",
+      "required": ["alg", "kid", "value"],
+      "properties": {
+        "alg": { "const": "Ed25519" },
+        "kid": { "type": "string" },
+        "value": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" }
+      }
+    }
+  }
+}
