@@ -66,8 +66,7 @@ def test_missing_env_var_fails(tmp_path, monkeypatch, capsys):
     card_file = tmp_path / "trustlayer.json"
     card_file.write_text(json.dumps(CARD), encoding="utf-8")
     monkeypatch.delenv("TL_SEED_MISSING", raising=False)
-    with pytest.raises(SystemExit):
-        main(["sign", str(card_file), "--seed-env", "TL_SEED_MISSING"])
+    assert main(["sign", str(card_file), "--seed-env", "TL_SEED_MISSING"]) == 2
 
 
 def test_keygen_warns_seed_shown_once(capsys):
