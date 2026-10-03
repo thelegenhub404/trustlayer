@@ -85,7 +85,13 @@ def write_data(payload: dict[str, Any], out_dir: str | pathlib.Path = DATA_DIR,
             old_meta = json.loads(meta_path.read_text(encoding="utf-8"))
         except ValueError:
             old_meta = {}
-    if old_meta.get("index_hash") == payload["index_hash"]:
+    counts = {"indexed": len(payload["agents.json"]), "l1": 0, "l2": 0, "l3": 0}
+    for r in payload["agents.json"]:
+        level = (r.get("level") or "L0").lower()
+        if level in counts:
+            counts[level] += 1
+    if (old_meta.get("index_hash") == payload["index_hash"]
+            and old_meta.get("counts") == counts):
         return False  # nothing changed: no commit, no redeploy
 
     out.mkdir(parents=True, exist_ok=True)
@@ -99,11 +105,6 @@ def write_data(payload: dict[str, Any], out_dir: str | pathlib.Path = DATA_DIR,
             json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     (out / "corpus.json").write_text(
         json.dumps(payload["corpus"], ensure_ascii=False), encoding="utf-8")
-    counts = {"indexed": len(payload["agents.json"]), "l1": 0, "l2": 0, "l3": 0}
-    for r in payload["agents.json"]:
-        level = (r.get("level") or "L0").lower()
-        if level in counts:
-            counts[level] += 1
     meta = {
         "index_hash": payload["index_hash"],
         "score_version": "score/1",
