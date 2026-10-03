@@ -6,7 +6,7 @@ import pytest
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 from tl import delivery
-from tl.keys import b64u_encode, to_jwk
+from tl.keys import to_jwk
 
 DOMAIN = "agent.example.com"
 DID = f"did:web:{DOMAIN}"

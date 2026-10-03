@@ -20,7 +20,6 @@ base64url-encoded. The whole delivery travels as base64url(JSON) in the
 
 from __future__ import annotations
 
-import base64
 import binascii
 import datetime as dt
 import hashlib
