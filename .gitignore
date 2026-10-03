@@ -11,3 +11,5 @@ venv/
 *.key
 *.seed
 .env
+*seed*.txt
+seed.b64u

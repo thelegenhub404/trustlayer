@@ -25,7 +25,9 @@ tl --help
 tl keygen example.com
 ```
 
-This creates an Ed25519 key pair and prints everything you need for the next steps: the key id (`kid`, e.g. `did:web:example.com#key-2026-1`), the DNS TXT record for step 4, and the private key seed as base64url. Keep the private seed **out of your repo and your web root**. Back it up: if you lose it you must rotate.
+This creates an Ed25519 key pair and prints everything you need for the next steps: the key id (`kid`, e.g. `did:web:example.com#key-2026-1`), the DNS TXT record for step 4, and the private key seed as base64url.
+
+**Save the seed now, in a password manager. It is printed only this once.** Never commit it, never place it in your web root, and do not leave it in a plain file in your home directory. If you lose it you must rotate. The repository's `.gitignore` already ignores common seed-file names (`*.seed`, `seed.b64u`, `*seed*.txt`) as a safety net — but the password manager is the real answer.
 
 ## 3. Publish your DID document
 
@@ -90,12 +92,18 @@ Rules that trip people up:
 
 ## 6. Sign it
 
+Pass the seed through the environment — **never on the command line**: a flag value stays in your shell history and is visible to other processes via the process list.
+
 ```bash
+export TL_SEED="<PRIVATE_KEY_SEED_BASE64URL>"   # paste from your password manager
 tl sign trustlayer.json \
-  --seed-b64u <PRIVATE_KEY_SEED_BASE64URL> \
+  --seed-env TL_SEED \
   --kid did:web:example.com#key-2026-1 \
   > .well-known/trustlayer.json
+unset TL_SEED
 ```
+
+If you must keep the seed in a file, `--seed-file path/to/seed.b64u` works too and warns you if the file is readable by others (`chmod 600` to fix). `--seed-b64u <seed>` still exists but prints a warning, because it leaks to shell history.
 
 The signature is computed over the canonical (RFC 8785) form of the file, and `tl sign` writes the signed card to **standard output** — that is why the command redirects it to the file you serve. The `--kid` must be the key id from your `did.json`. Do not edit the file after signing; sign again instead.
 
