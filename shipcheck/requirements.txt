@@ -1,2 +1,2 @@
-trustlayer @ git+https://github.com/thelegenhub404/trustlayer.git@main
+trustlayer @ git+https://github.com/thelegenhub404/trustlayer.git@314f1481d39d1f550f811ce75d9f9dba4365642a
 cryptography>=42.0
