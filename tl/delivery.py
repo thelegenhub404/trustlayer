@@ -110,6 +110,10 @@ def verify_delivery(delivery: dict[str, Any], did_doc: dict[str, Any],
                     body: bytes, *, now: dt.datetime | None = None) -> str | None:
     """Verify a delivery object against the agent's did.json and body bytes.
 
+    Key role separation (SPEC v0.2.2): only keys listed in
+    ``authentication`` may sign deliveries. Identity keys live in
+    ``assertionMethod`` and cannot sign (or verify) deliveries.
+
     Returns None when valid; a reason code otherwise.
     """
     sig = delivery.get("signature")
@@ -123,8 +127,8 @@ def verify_delivery(delivery: dict[str, Any], did_doc: dict[str, Any],
             break
     if not key:
         return "key_not_found"
-    if kid not in (did_doc.get("assertionMethod") or []):
-        return "key_not_in_assertion"
+    if kid not in (did_doc.get("authentication") or []):
+        return "key_not_in_authentication"
     body_obj = {k: v for k, v in delivery.items() if k != "signature"}
     try:
         from .keys import jwk_to_raw

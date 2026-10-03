@@ -65,8 +65,21 @@ crawls drop the agent to L0.
 > - Optional: without `TrustLayer-Nonce` the agent responds exactly as
 >   before.
 > - Agents SHOULD use a separate delivery key (`#delivery-1`), distinct from
->   the identity key; both are listed in `assertionMethod` and both
->   fingerprints appear in the DNS TXT record.
+>   the identity key.
+>
+> **v0.2.2 — key role separation:** keys have exactly one role.
+>
+> - The identity key (`#key-*`) appears only in `assertionMethod`; it signs
+>   `trustlayer.json`. A card signed by any other key is rejected.
+> - The delivery key (`#delivery-*`) appears only in `authentication`; it
+>   signs `TrustLayer-Delivery` objects. A delivery signed by any other key
+>   is rejected.
+> - The DNS TXT record carries the fingerprints of both keys.
+> - **Rotating the delivery key** never touches the identity: publish the new
+>   delivery key in `did.json` under `authentication`, add its fingerprint to
+>   the DNS TXT, start signing with it, then remove the old key and list it
+>   under `revoked_kids` in `trustlayer.json`. The identity key, the signed
+>   card and the trust level are unaffected.
 > - Server-side validation, only when `TrustLayer-Nonce` is present: nonce is
 >   16-64 base64url characters; `task_hash` matches `sha256:<64 hex>`;
 >   violations return 400 with a clear message.

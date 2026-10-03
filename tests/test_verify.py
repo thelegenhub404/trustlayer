@@ -1,5 +1,7 @@
 """Verification algorithm tests with an in-memory fake fetcher (no network)."""
 
+import pytest
+
 import datetime as dt
 import json
 
@@ -177,3 +179,28 @@ def test_alternative_whitespace_json_signs_differently_but_verify_holds():
     res1 = run(did_doc, card, [fp])
     res2 = run(json.loads(json.dumps(did_doc)), json.loads(json.dumps(card)), [fp])
     assert res1["level"] == res2["level"] == "L2"
+
+
+def test_card_signed_by_delivery_key_rejected():
+    # v0.2.2: the delivery key lives only in authentication; a card signed
+    # with it must not verify.
+    def mutate(card):
+        card["signature"] = {"alg": "Ed25519",
+                             "kid": DID + "#delivery-1", "value": "AA"}
+    did_doc, card = make_artifacts(mutate_card=mutate)
+    delivery_key = {"id": DID + "#delivery-1", "type": "JsonWebKey2020",
+                    "controller": DID, "publicKeyJwk": to_jwk(generate_keypair()[1])}
+    did_doc["verificationMethod"].append(delivery_key)
+    did_doc["authentication"] = [DID + "#delivery-1"]
+    result = run(did_doc, card, [])
+    assert result["level"] != "L2"
+    assert check_names(result)["signature"]["reason"] == "key_not_in_assertion"
+
+
+@pytest.mark.skipif(not __import__("os").environ.get("TL_INTEGRATION"),
+                    reason="live-network test; set TL_INTEGRATION=1")
+def test_snaypy_still_l2_live():
+    # (c) v0.2.2: role separation must not affect snaypy.com's identity.
+    import tl.verify as v
+    result = v.verify_domain("snaypy.com")
+    assert result["level"] == "L2"

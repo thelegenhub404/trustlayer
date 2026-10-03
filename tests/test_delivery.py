@@ -16,13 +16,14 @@ TASK_HASH = "sha256:" + "a" * 64
 
 PRIV = Ed25519PrivateKey.generate()
 KID = DID + "#delivery-1"
-DID_DOC = {
+DID_DOC = {  # v0.2.2 roles: the delivery key lives only in authentication
     "id": DID,
     "verificationMethod": [{
         "id": KID, "type": "JsonWebKey2020", "controller": DID,
         "publicKeyJwk": to_jwk(PRIV.public_key()),
     }],
-    "assertionMethod": [KID],
+    "assertionMethod": [],
+    "authentication": [KID],
 }
 
 
@@ -71,9 +72,9 @@ def test_unlisted_key_fails():
     d = make(priv=Ed25519PrivateKey.generate())
     assert delivery.verify_delivery(d, DID_DOC, BODY, now=NOW) == "bad_signature"
     other_doc = {"verificationMethod": DID_DOC["verificationMethod"],
-                 "assertionMethod": ["did:web:x#other"]}
+                 "authentication": ["did:web:x#other"]}
     d2 = make()
-    assert delivery.verify_delivery(d2, other_doc, BODY, now=NOW) == "key_not_in_assertion"
+    assert delivery.verify_delivery(d2, other_doc, BODY, now=NOW) == "key_not_in_authentication"
 
 
 def test_timestamp_out_of_range_fails():
@@ -81,3 +82,31 @@ def test_timestamp_out_of_range_fails():
     assert delivery.verify_delivery(d, DID_DOC, BODY, now=NOW) == "timestamp_out_of_range"
     ok = make(now=NOW - dt.timedelta(hours=23))
     assert delivery.verify_delivery(ok, DID_DOC, BODY, now=NOW) is None
+
+
+# --- v0.2.2 key role separation ---
+
+ROLE_DOC = {  # identity key NOT in authentication; delivery key only there
+    "id": DID,
+    "verificationMethod": [
+        {"id": DID + "#key-2026-1", "type": "JsonWebKey2020",
+         "controller": DID, "publicKeyJwk": to_jwk(PRIV.public_key())},
+        {"id": KID, "type": "JsonWebKey2020", "controller": DID,
+         "publicKeyJwk": to_jwk(PRIV.public_key())},
+    ],
+    "assertionMethod": [DID + "#key-2026-1"],
+    "authentication": [KID],
+}
+
+IDENTITY_PRIV = PRIV  # reuse; in a real setup these are different keys
+
+
+def test_delivery_signed_by_identity_key_fails():
+    d = make(kid=DID + "#key-2026-1")
+    # the identity key is not listed in authentication -> rejected
+    assert delivery.verify_delivery(d, ROLE_DOC, BODY, now=NOW) == "key_not_in_authentication"
+
+
+def test_delivery_role_doc_still_roundtrips():
+    d = make()
+    assert delivery.verify_delivery(d, ROLE_DOC, BODY, now=NOW) is None

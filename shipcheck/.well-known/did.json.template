@@ -26,7 +26,9 @@
     }
   ],
   "assertionMethod": [
-    "did:web:YOUR-DOMAIN#key-2026-1",
+    "did:web:YOUR-DOMAIN#key-2026-1"
+  ],
+  "authentication": [
     "did:web:YOUR-DOMAIN#delivery-1"
   ]
 }
