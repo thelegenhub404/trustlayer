@@ -1,7 +1,7 @@
 {
   "agent_id": "did:web:snaypy.com",
   "domain": "snaypy.com",
-  "level": "L2",
+  "level": "L1",
   "checks": [
     {
       "name": "did_json",
@@ -25,7 +25,8 @@
     },
     {
       "name": "key_not_expired",
-      "ok": true
+      "ok": false,
+      "reason": "outside issued_at/expires_at"
     },
     {
       "name": "key_fingerprint",
